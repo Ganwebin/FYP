@@ -1,0 +1,115 @@
+body {
+    display: flex;
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.left-section {
+    flex: 1;
+    position: relative;
+    background-image: url('/project-folder/assets/images/bg.png');  /* 从项目根目录开始的完整路径 */
+    background-size: cover;
+    background-position: center;
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 90%);
+}
+
+.title {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    font-size: 5em;
+    font-weight: bold;
+    color: #000;
+    transform: rotate(-10deg);
+    z-index: 2;
+}
+
+/* Menu Button */
+.menu-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* Right Section Styles */
+.right-section {
+    width: 33%;
+    background-color: #fff;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.right-section label {
+    font-weight: 500;
+}
+
+.right-section input[type="text"],
+.right-section input[type="date"],
+.right-section input[type="time"],
+.right-section select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin: 5px 0;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+button[type="reset"] {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+button[type="button"] {
+    background-color: #FFA500;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.error {
+    color: #ff4444;
+    font-size: 14px;
+    display: none;
+}

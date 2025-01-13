@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bazi Career Analysis Results</title>
+    <style>
+        .result-body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffe457;
+        }
+
+        .result-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .result-header h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 28px;
+        }
+
+        .result-userInfo {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .result-userInfo h2 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .result-content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .result-job-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .result-job-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .result-chart-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .result-job-item {
+            background: linear-gradient(to right, #FFD700, #FFA500);
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .result-job-item:hover {
+            transform: translateX(5px);
+        }
+
+        .result-job-name {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .result-job-percentage {
+            font-weight: bold;
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        .result-conclusion {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(to right, #FFD700, #FFA500);
+            border-radius: 10px;
+            line-height: 1.6;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .section-separator {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        /* Chat Box Styles */
+        .chat-box {
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .chat-header {
+            background-color: #FFD700;
+            color: #2c3e50;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .chat-content {
+            height: 300px;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #FFD700;
+            color: #2c3e50;
+            margin-left: auto;
+        }
+
+        .ai-message {
+            background-color: #f0f0f0;
+            color: #2c3e50;
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 10px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .send-button {
+            background-color: #FFD700;
+            color: #2c3e50;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .send-button:hover {
+            background-color: #FFC800;
+        }
+
+        .open-chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FFD700;
+            color: #2c3e50;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+
+        .open-chat-button:hover {
+            background-color: #FFC800;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: #2c3e50;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        @media (max-width: 768px) {
+            .result-content {
+                flex-direction: column;
+            }
+            
+            .result-job-section, 
+            .result-chart-section {
+                min-width: 100%;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="result-body">
+    <div class="result-container">
+        <div class="result-header">
+            <a href="index.html">
+                <h1>Career Analysis Results</h1>
+            </a>
+            <div id="userInfo" class="result-userInfo"></div>
+        </div>
+
+        <div class="result-content">
+            <div class="result-job-section">
+                <h2>Career Analysis</h2>
+                <div id="recommendedJobs">
+                    <h3>Top Recommended Careers</h3>
+                    <div id="recommendedJobList"></div>
+                </div>
+                <div id="selectedJobs">
+                    <h3 class="section-separator">Your Selected Careers</h3>
+                    <div id="selectedJobList"></div>
+                </div>
+            </div>
+            
+            <div class="result-chart-section">
+                <canvas id="elementChart"></canvas>
+            </div>
+        </div>
+
+        <div class="result-conclusion" id="conclusion"></div>
+    </div>
+
+    <!-- Chat Components -->
+    <button class="open-chat-button" id="openChat">
+        Chat with AI
+    </button>
+
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header">
+            <h3>AI Assistant</h3>
+            <button class="close-chat" id="closeChat">×</button>
+        </div>
+        <div class="chat-content" id="chatContent">
+        </div>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="userInput" placeholder="Type your message...">
+            <button class="send-button" id="sendMessage">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Bazi Analysis Functions
+        function calculateBazi(year, month, day, hour) {
+            const celestialStems = ['Jia', 'Yi', 'Bing', 'Ding', 'Wu', 'Ji', 'Geng', 'Xin', 'Ren', 'Gui'];
+            const terrestrialBranches = ['Zi', 'Chou', 'Yin', 'Mao', 'Chen', 'Si', 'Wu', 'Wei', 'Shen', 'You', 'Xu', 'Hai'];
+            
+            const yearStem = celestialStems[(year - 4) % 10];
+            const yearBranch = terrestrialBranches[(year - 4) % 12];
+            const monthStem = celestialStems[(month + 2) % 10];
+            const monthBranch = terrestrialBranches[month - 1];
+            const dayStem = celestialStems[day % 10];
+            const dayBranch = terrestrialBranches[day % 12];
+            const hourStem = celestialStems[hour % 10];
+            const hourBranch = terrestrialBranches[Math.floor(hour / 2) % 12];
+            
+            return {
+                year: { stem: yearStem, branch: yearBranch },
+                month: { stem: monthStem, branch: monthBranch },
+                day: { stem: dayStem, branch: dayBranch },
+                hour: { stem: hourStem, branch: hourBranch }
+            };
+        }
+
+        function getElementAffinities(bazi) {
+            const elementMap = {
+                'Jia': 'Wood', 'Yi': 'Wood',
+                'Bing': 'Fire', 'Ding': 'Fire',
+                'Wu': 'Earth', 'Ji': 'Earth',
+                'Geng': 'Metal', 'Xin': 'Metal',
+                'Ren': 'Water', 'Gui': 'Water'
+            };
+            
+            const elements = {
+                'Wood': 0, 'Fire': 0, 'Earth': 0, 'Metal': 0, 'Water': 0
+            };
+            
+            const pillars = [bazi.year, bazi.month, bazi.day, bazi.hour];
+            const weights = [1, 2, 3, 1];
+            
+            pillars.forEach((pillar, index) => {
+                const element = elementMap[pillar.stem];
+                if (element) {
+                    elements[element] += weights[index];
+                }
+            });
+
+            const total = Object.values(elements).reduce((a, b) => a + b, 0);
+            const percentages = {};
+            for (let element in elements) {
+                percentages[element] = total > 0 ? (elements[element] / total * 100) : 0;
+            }
+            
+            return percentages;
+        }
+
+        function getCareerRecommendations(elementAffinities) {
+            const careerAffinities = {
+                'Management': elementAffinities['Wood'] * 1.5,
+                'Services': elementAffinities['Fire'] * 1.2 + elementAffinities['Water'] * 0.8,
+                'Production': elementAffinities['Metal'] * 1.2 + elementAffinities['Earth'] * 0.8,
+                'Manufacturing': elementAffinities['Metal'] * 1.3 + elementAffinities['Fire'] * 0.7,
+                'Education': elementAffinities['Wood'] * 0.8 + elementAffinities['Water'] * 1.2,
+                'Politics': elementAffinities['Fire'] * 1.5
+            };
+            
+            const maxScore = Math.max(...Object.values(careerAffinities));
+            const normalizedScores = {};
+            for (let career in careerAffinities) {
+                normalizedScores[career] = Math.round((careerAffinities[career] / maxScore) * 100);
+            }
+            
+            return normalizedScores;
+        }
+
+        function calculateCareerCompatibility(career, elementAffinities) {
+            if (!career) return null;
+            const careerElementMap = {
+                // Metal careers
+                'science': 'Metal',
+                'insurance': 'Metal',
+                'heavy-metal': 'Metal',
+                'finance': 'Metal',
+                'investment': 'Metal',
+                'hardware': 'Metal',
+                'jewelry': 'Metal',
+                'financial-services': 'Metal',
+                'mining': 'Metal',
+                'automotive': 'Metal',
+                'mechanical-engineering': 'Metal',
+
+                // Wood careers
+                'wood-manufacturing': 'Wood',
+                'renovation': 'Wood',
+                'education': 'Wood',
+                'gallery': 'Wood',
+                'furniture': 'Wood',
+                'horticulture': 'Wood',
+                'publishing': 'Wood',
+                'healthcare': 'Wood',
+                'religious-supplies': 'Wood',
+                'paper-manufacturing': 'Wood',
+                'plantation': 'Wood',
+                'clothing-and-textile': 'Wood',
+
+                // Water careers
+                'maritime': 'Water',
+                'tourism': 'Water',
+                'entertainment': 'Water',
+                'legal': 'Water',
+                'design': 'Water',
+                'trade': 'Water',
+                'toy': 'Water',
+                'beverage': 'Water',
+                'aquaculture': 'Water',
+                'logistics': 'Water',
+                'audio': 'Water',
+                'urology-ent': 'Water',
+
+                // Fire careers
+                'aviation': 'Fire',
+                'beauty': 'Fire',
+                'writing': 'Fire',
+                'consulting': 'Fire',
+                'data': 'Fire',
+                'virtual': 'Fire',
+                'catering': 'Fire',
+                'health': 'Fire',
+                'metaphysics': 'Fire',
+                'energy': 'Fire',
+                'aesthetics': 'Fire',
+                'ophthalmology-cardiology': 'Fire',
+
+                // Earth careers
+                'funeral': 'Earth',
+                'antique': 'Earth',
+                'pet': 'Earth',
+                'accounting': 'Earth',
+                'nursing': 'Earth',
+                'real-estate': 'Earth',
+                'artifact': 'Earth',
+                'cement-construction': 'Earth',
+                'agriculture': 'Earth',
+                'animal-husbandry': 'Earth',
+                'pawnshop': 'Earth',
+                'food-processing': 'Earth'
+            };
+
+            const careerElement = careerElementMap[career];
+            if (!careerElement) return null;
+
+            const elementScore = elementAffinities[careerElement];
+            const totalScore = Object.values(elementAffinities).reduce((a, b) => a + b, 0);
+            return {
+                career: career.replace(/-/g, ' ').split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' '),
+                score: Math.round((elementScore / totalScore) * 100),
+                element: careerElement
+            };
+        }
+
+        // Initialize Bazi Analysis
+        document.addEventListener('DOMContentLoaded', function() {
+            const name = localStorage.getItem('name');
+            const birthDate = localStorage.getItem('birthDate');
+            const firstCareer = localStorage.getItem('career');
+            const secondCareer = localStorage.getItem('secondCareer');
+            
+            if (!name || !birthDate) {
+                alert('Unable to get user information, please go back and re-enter');
+                return;
+            }
+
+            const birthDateTime = new Date(birthDate);
+            const bazi = calculateBazi(
+                birthDateTime.getFullYear(),
+                birthDateTime.getMonth() + 1,
+                birthDateTime.getDate(),
+                birthDateTime.getHours()
+            );
+
+            document.getElementById('userInfo').innerHTML = `
+                <h2>${name}</h2>
+                <div>${birthDateTime.toLocaleDateString()}</div>
+            `;
+
+            const elementAffinities = getElementAffinities(bazi);
+            const careerScores = getCareerRecommendations(elementAffinities);
+            
+            // Handle recommended careers
+            const recommendedJobList = document.getElementById('recommendedJobList');
+            Object.entries(careerScores)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3) // Only show top 3 recommendations
+                .forEach(([career, score]) => {
+                    const jobDiv = document.createElement('div');
+                    jobDiv.className = 'result-job-item';
+                    jobDiv.innerHTML = `
+                        <span class="result-job-name">${career}</span>
+                        <span class="result-job-percentage">${score}%</span>
+                    `;
+                    recommendedJobList.appendChild(jobDiv);
+                });
+
+            // Handle user selected careers
+            const selectedJobList = document.getElementById('selectedJobList');
+            const firstCareerMatch = firstCareer ? calculateCareerCompatibility(firstCareer, elementAffinities) : null;
+            const secondCareerMatch = secondCareer ? calculateCareerCompatibility(secondCareer, elementAffinities) : null;
+
+            if (firstCareerMatch) {
+                const jobDiv = document.createElement('div');
+                jobDiv.className = 'result-job-item';
+                jobDiv.innerHTML = `
+                    <span class="result-job-name">${firstCareerMatch.career}</span>
+                    <span class="result-job-percentage">${firstCareerMatch.score}%</span>
+                `;
+                selectedJobList.appendChild(jobDiv);
+            }
+
+            if (secondCareerMatch) {
+                const jobDiv = document.createElement('div');
+                jobDiv.className = 'result-job-item';
+                jobDiv.innerHTML = `
+                    <span class="result-job-name">${secondCareerMatch.career}</span>
+                    <span class="result-job-percentage">${secondCareerMatch.score}%</span>
+                `;
+                selectedJobList.appendChild(jobDiv);
+            }
+
+            // Create element chart
+            const ctx = document.getElementById('elementChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'Wood (Manager)',
+                        'Fire (Supporters)',
+                        'Earth (Thinkers)',
+                        'Metal (Connectors)',
+                        'Water (Creators)'
+                    ],
+                    datasets: [{
+                        data: [
+                            elementAffinities['Wood'],
+                            elementAffinities['Fire'],
+                            elementAffinities['Earth'],
+                            elementAffinities['Metal'],
+                            elementAffinities['Water']
+                        ],
+                        backgroundColor: [
+                            '#ffb347',
+                            '#ff6b6b', 
+                            '#ffe457',
+                            '#c2c2c2',
+                            '#ffd700'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    size: 14
+                                },
+                                padding: 20,
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => ({
+                                            text: `${label}\n${data.datasets[0].data[i].toFixed(1)}%`,
+                                            fillStyle: data.datasets[0].backgroundColor[i],
+                                            index: i
+                                        }));
+                                    }
+                                    return [];
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            const dominantElement = Object.entries(elementAffinities)
+                .sort((a, b) => b[1] - a[1])[0];
+
+            // Update conclusion
+            document.getElementById('conclusion').innerHTML = `
+                <strong>${Object.entries(careerScores).sort((a, b) => b[1] - a[1])[0][0]}</strong> would be ideal for you.
+                ${firstCareerMatch ? `<br>Your first desired career: (${firstCareerMatch.career}) ${firstCareerMatch.score}% .` : ''}
+                ${secondCareerMatch ? `<br>Your second desired career: (${secondCareerMatch.career}) ${secondCareerMatch.score}% .` : ''}
+            `;
+        });
+
+        // Chat Functions
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById('openChat').addEventListener('click', function() {
+                document.getElementById('chatBox').style.display = 'block';
+                this.style.display = 'none';
+            });
+
+            document.getElementById('closeChat').addEventListener('click', function() {
+                document.getElementById('chatBox').style.display = 'none';
+                document.getElementById('openChat').style.display = 'block';
+            });
+
+            document.getElementById('sendMessage').addEventListener('click', sendMessage);
+            document.getElementById('userInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+
+            if (!userInput.trim()) return;
+
+            try {
+                const response = await fetch('http://localhost:3000/get-ai-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userInput })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                displayMessage('User', userInput, 'user-message');
+                displayMessage('AI', data.response, 'ai-message');
+
+                document.getElementById('userInput').value = '';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function displayMessage(sender, message, className) {
+            const chatContent = document.getElementById('chatContent');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${className}`;
+            messageDiv.textContent = `${sender}: ${message}`;
+            chatContent.appendChild(messageDiv);
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+    </script>
+</body>
+</html>
