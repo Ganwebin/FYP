@@ -241,6 +241,57 @@
             padding: 0 5px;
         }
 
+        .bazi-chart-container {
+            margin: 30px auto;
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .bazi-grid {
+            display: flex;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .bazi-pillar {
+            flex: 1;
+            border-right: 1px solid #FFD700;
+        }
+
+        .bazi-pillar:last-child {
+            border-right: none;
+        }
+
+        .pillar-header {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            padding: 10px;
+            text-align: center;
+            color: #2c3e50;
+            font-weight: bold;
+            border-bottom: 1px solid #FFD700;
+        }
+
+        .pillar-content {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .pillar-cell {
+            padding: 15px;
+            text-align: center;
+            background: rgba(255, 215, 0, 0.1);
+            border-bottom: 1px solid #FFD700;
+        }
+
+        .pillar-cell:last-child {
+            border-bottom: none;
+            background: rgba(255, 215, 0, 0.2);
+        }
+
         @media (max-width: 768px) {
             .result-content {
                 flex-direction: column;
@@ -263,7 +314,10 @@
             </a>
             <div id="userInfo" class="result-userInfo"></div>
         </div>
-
+        <div class="bazi-chart-container">
+            <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">Your Bazi Chart</h2>
+            <div id="baziChart" class="bazi-grid"></div>
+        </div>
         <div class="result-content">
             <div class="result-job-section">
                 <h2>Career Analysis</h2>
@@ -464,6 +518,29 @@
             };
         }
 
+        function renderBaziChart(bazi) {
+            const baziChart = document.getElementById('baziChart');
+            const pillars = [
+                { name: 'Hour', data: bazi.hour },
+                { name: 'Day', data: bazi.day },
+                { name: 'Month', data: bazi.month },
+                { name: 'Year', data: bazi.year }
+            ];
+
+            pillars.forEach(pillar => {
+                const pillarDiv = document.createElement('div');
+                pillarDiv.className = 'bazi-pillar';
+                pillarDiv.innerHTML = `
+                    <div class="pillar-header">${pillar.name}</div>
+                    <div class="pillar-content">
+                        <div class="pillar-cell">${pillar.data.stem}</div>
+                        <div class="pillar-cell">${pillar.data.branch}</div>
+                    </div>
+                `;
+                baziChart.appendChild(pillarDiv);
+            });
+        }
+
         // Initialize Bazi Analysis
         document.addEventListener('DOMContentLoaded', function() {
             const name = localStorage.getItem('name');
@@ -483,6 +560,9 @@
                 birthDateTime.getDate(),
                 birthDateTime.getHours()
             );
+
+            // Render Bazi Chart
+            renderBaziChart(bazi);
 
             document.getElementById('userInfo').innerHTML = `
                 <h2>${name}</h2>
@@ -592,6 +672,8 @@
 
             const dominantElement = Object.entries(elementAffinities)
                 .sort((a, b) => b[1] - a[1])[0];
+
+                
 
             // Update conclusion
             document.getElementById('conclusion').innerHTML = `
