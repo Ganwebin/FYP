@@ -10,11 +10,26 @@ body {
 .left-section {
     flex: 1;
     position: relative;
-    background-image: url('/project-folder/assets/images/bg.png');  /* 从项目根目录开始的完整路径 */
+    background-image: url('../images/bg.png');
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    min-width: 300px;
 }
 
+/* Add a fallback background color */
+.left-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f8f8f8;
+    z-index: -1;
+}
+
+/* Rest of your existing styles remain the same */
 .gradient-overlay {
     position: absolute;
     top: 0;
@@ -30,7 +45,7 @@ body {
     left: 20px;
     font-size: 5em;
     font-weight: bold;
-    color: #000;
+    color: #ffffff;
     transform: rotate(-10deg);
     z-index: 2;
 }
