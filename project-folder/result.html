@@ -519,27 +519,87 @@
         }
 
         function renderBaziChart(bazi) {
-            const baziChart = document.getElementById('baziChart');
-            const pillars = [
-                { name: 'Hour', data: bazi.hour },
-                { name: 'Day', data: bazi.day },
-                { name: 'Month', data: bazi.month },
-                { name: 'Year', data: bazi.year }
-            ];
+    const baziChart = document.getElementById('baziChart');
+    
+    // Chinese character mapping
+    const chineseCharacters = {
+        // Stems (天干)
+        'Jia': '甲',
+        'Yi': '乙',
+        'Bing': '丙',
+        'Ding': '丁',
+        'Wu': '戊',
+        'Ji': '己',
+        'Geng': '庚',
+        'Xin': '辛',
+        'Ren': '壬',
+        'Gui': '癸',
+        // Branches (地支)
+        'Zi': '子',
+        'Chou': '丑',
+        'Yin': '寅',
+        'Mao': '卯',
+        'Chen': '辰',
+        'Si': '巳',
+        'Wu': '午',
+        'Wei': '未',
+        'Shen': '申',
+        'You': '酉',
+        'Xu': '戌',
+        'Hai': '亥'
+    };
 
-            pillars.forEach(pillar => {
-                const pillarDiv = document.createElement('div');
-                pillarDiv.className = 'bazi-pillar';
-                pillarDiv.innerHTML = `
-                    <div class="pillar-header">${pillar.name}</div>
-                    <div class="pillar-content">
-                        <div class="pillar-cell">${pillar.data.stem}</div>
-                        <div class="pillar-cell">${pillar.data.branch}</div>
-                    </div>
-                `;
-                baziChart.appendChild(pillarDiv);
-            });
-        }
+    // Updated styles for the pillar cells
+    const additionalStyles = `
+        <style>
+            .chinese-character {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .english-text {
+                font-size: 14px;
+                color: #666;
+            }
+            .pillar-cell {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 80px;
+            }
+        </style>
+    `;
+    document.head.insertAdjacentHTML('beforeend', additionalStyles);
+
+    const pillars = [
+        { name: 'Hour', data: bazi.hour },
+        { name: 'Day', data: bazi.day },
+        { name: 'Month', data: bazi.month },
+        { name: 'Year', data: bazi.year }
+    ];
+
+    baziChart.innerHTML = ''; // Clear existing content
+
+    pillars.forEach(pillar => {
+        const pillarDiv = document.createElement('div');
+        pillarDiv.className = 'bazi-pillar';
+        pillarDiv.innerHTML = `
+            <div class="pillar-header">${pillar.name}</div>
+            <div class="pillar-content">
+                <div class="pillar-cell">
+                    <div class="chinese-character">${chineseCharacters[pillar.data.stem] || pillar.data.stem}</div>
+                    <div class="english-text">${pillar.data.stem}</div>
+                </div>
+                <div class="pillar-cell">
+                    <div class="chinese-character">${chineseCharacters[pillar.data.branch] || pillar.data.branch}</div>
+                    <div class="english-text">${pillar.data.branch}</div>
+                </div>
+            </div>
+        `;
+        baziChart.appendChild(pillarDiv);
+    });
+}
 
         // Initialize Bazi Analysis
         document.addEventListener('DOMContentLoaded', function() {
